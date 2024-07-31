@@ -27,7 +27,22 @@ export class InMemoryDataService implements InMemoryDbService {
       { id: 108, quoteNumber: 'AC127PC', lineOfBusiness: 15 }
     ];
 
-    return {linesOfBusiness};
+    // Returned recentQuotes
+    return {linesOfBusiness, recentQuotes};
+  }
+
+  // Method for lines of business, quote count calculation
+  getQuoteCount() {
+    const db = this.createDb(); 
+    let linesOfBusiness = db.linesOfBusiness;
+    const recentQuotes = db.recentQuotes;
+
+    const quoteCounts = linesOfBusiness.map(line => ({
+      ...line,
+      quoteCount: recentQuotes.filter(quote => quote.lineOfBusiness === line.id).length
+    }));
+
+    return quoteCounts.sort((a, b) => b.quoteCount - a.quoteCount);
   }
 
   // Overrides the genId method to ensure that a line of business always has an id.
