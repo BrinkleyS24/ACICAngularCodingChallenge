@@ -1,5 +1,9 @@
 <!-- Display the top Lines of Business with their Quote Count -->
- <div *ngFor="let line of topLinesOfBusiness">
-    <h3>{{line.name}}</h3>
-    <p>Quotes: {{line.quoteCont}}</p>
- </div>
+<div class="quote-count">
+    <div *ngFor="let line of topLinesOfBusiness" class="quote-count-item">
+        <a>
+            <span class="badge">{{line.quoteCount}}</span>
+            {{line.name}}
+        </a>
+    </div>
+</div>
