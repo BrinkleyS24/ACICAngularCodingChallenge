@@ -2,7 +2,7 @@
 <div class="quote-count">
     <h2>Most Popular Lines</h2>
     <div *ngFor="let line of topLinesOfBusiness" class="quote-count-item">
-        <a>
+        <a [routerLink]="['/detail', line.id]">
             <span class="badge">{{line.quoteCount}}</span>
             {{line.name}}
         </a>

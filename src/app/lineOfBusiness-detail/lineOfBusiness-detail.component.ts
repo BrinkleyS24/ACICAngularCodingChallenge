@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 
 import { LineOfBusiness } from '../LineOfBusiness';
 import { LineOfBusinessService } from '../lineOfBusiness.service';
+import { InMemoryDataService } from '../in-memory-data.service';
 
 @Component({
   selector: 'app-lineOfBusiness-detail',
@@ -12,11 +13,13 @@ import { LineOfBusinessService } from '../lineOfBusiness.service';
 })
 export class LineOfBusinessDetailComponent implements OnInit {
   lineOfBusiness: LineOfBusiness | undefined;
+  quoteCount: number | undefined;
 
   constructor(
     private route: ActivatedRoute,
     private lineOfBusinessService: LineOfBusinessService,
-    private location: Location
+    private location: Location,
+    private inMemoryDataService: InMemoryDataService
   ) {}
 
   ngOnInit(): void {
@@ -26,7 +29,15 @@ export class LineOfBusinessDetailComponent implements OnInit {
   getLineOfBusiness(): void {
     const id = parseInt(this.route.snapshot.paramMap.get('id')!, 10);
     this.lineOfBusinessService.getLineOfBusiness(id)
-      .subscribe(lineOfBusiness => this.lineOfBusiness = lineOfBusiness);
+      .subscribe(lineOfBusiness => {
+        this.lineOfBusiness = lineOfBusiness;
+        this.getQuoteCount(lineOfBusiness.id);
+      });
+  }
+
+  getQuoteCount(lineOfBusinessId: number): void {
+    const quotes = this.inMemoryDataService.createDb().recentQuotes;
+    this.quoteCount = quotes.filter(quote => quote.lineOfBusiness === lineOfBusinessId).length
   }
 
   goBack(): void {
